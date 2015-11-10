@@ -36,7 +36,7 @@ if [[ "$VERSION" == "" ]];
 	unzip -qq ${path}/build/dist/*.zip -d ${ext}/Master/$now
 			if [ -d ${ext}/Master/$now/ ]; 
 				then
-					open -f ${ext}/Master/"$now"Datameer* || echo "Building Dists was successfull!" 
+					open -f ${ext}/Master/"$now"Datameer*/ || echo "Building Dists was successfull!" 
 					exit
 			fi
 	fi
