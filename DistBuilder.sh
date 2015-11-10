@@ -105,6 +105,7 @@ fi
 
 if [ "$VERSION2" = "" ]; 
 	then 
+		open ${ext}/$VERSION1
 		exit 
 fi
 
@@ -135,6 +136,7 @@ fi
 
 if [ "$VERSION3" = "" ]; 
 	then 
+		open ${ext}/$VERSION2
 		exit 
 fi
 
@@ -199,6 +201,7 @@ fi
 
 if [ "$VERSION5" = "" ]; 
 	then 
+		open ${ext}/$VERSION4
 		exit 
 fi
 
