@@ -33,7 +33,7 @@ if [[ "$VERSION" == "" ]];
 
 	git checkout master && git pull && ant clean-all dist
 	mkdir -p ${ext}/Master/
-	unzip ${path}/build/dist/*.zip -d ${ext}/Master/$now
+	unzip -qq ${path}/build/dist/*.zip -d ${ext}/Master/$now
 			if [ -d ${ext}/Master/$now/ ]; 
 				then
 					open -f ${ext}/Master/"$now"Datameer* || echo "Building Dists was successfull!" 
@@ -92,7 +92,7 @@ if [ $size1 -gt 6 ];
 	
 fi
 	mkdir -p ${ext}/"$VERSION1"/
-	unzip ${path}/build/dist/*.zip -d ${ext}/"$VERSION1"/$now
+	unzip -qq ${path}/build/dist/*.zip -d ${ext}/"$VERSION1"/$now
 	
 	if [ -d ${ext}/$VERSION1 ]
 		then
@@ -124,7 +124,7 @@ if [ $size2 -gt 6 ];
 	
 fi
 		mkdir -p ${ext}/"$VERSION2"/
-		unzip ${path}/build/dist/*.zip -d ${ext}/$VERSION2/$now
+		unzip -qq ${path}/build/dist/*.zip -d ${ext}/$VERSION2/$now
 
 		if [ -d ${ext}/$VERSION2 ]
 			then
@@ -158,7 +158,7 @@ if [ $size3 -gt 6 ];
 		git checkout $VERSION3 && git pull && ant clean-all dist $Hadoop
 fi
 		mkdir -p ${ext}/"$VERSION3"/
-		unzip ${path}/build/dist/*.zip -d ${ext}/$VERSION3/$now
+		unzip -qq ${path}/build/dist/*.zip -d ${ext}/$VERSION3/$now
 		
 		if [ -d ${ext}/$VERSION3 ]	
 			then
@@ -189,7 +189,7 @@ if [ $size4 -gt 6 ];
 		git checkout $VERSION4 && git pull && ant clean-all dist $Hadoop
 fi
 		mkdir -p ${ext}/"$VERSION4"/
-		unzip ${path}/build/dist/*.zip -d ${ext}/$VERSION4/$now
+		unzip -qq ${path}/build/dist/*.zip -d ${ext}/$VERSION4/$now
 
 	if [ -d ${ext}/$VERSION4 ]
 		then
@@ -224,7 +224,7 @@ if [ $size5 -gt 6 ];
 
 fi
 		mkdir -p ${ext}/"$VERSION5"/
-		unzip ${path}/build/dist/*.zip -d ${ext}/$VERSION5/$now
+		unzip -qq ${path}/build/dist/*.zip -d ${ext}/$VERSION5/$now
 		
 		if [ -d ${ext}/$VERSION5 ]
 			then
