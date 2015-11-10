@@ -96,9 +96,9 @@ fi
 	
 	if [ -d ${ext}/$VERSION1 ]
 		then
-			echo "First Version was unzipped successfully!"
+			echo "First Version, $VERSION1 was unzipped successfully!"
 		else
-			echo "First Version was NOT unzipped successfully!"
+			echo "First Version, $VERSION1 was NOT unzipped successfully!"
 	fi
 
 
@@ -127,9 +127,9 @@ fi
 
 		if [ -d ${ext}/$VERSION2 ]
 			then
-			echo "Second Version was unzipped successfully!"
+			echo "Second Version, $VERSION2 was unzipped successfully!"
 		else
-			echo "Second Version was NOT unzipped successfully!"
+			echo "Second Version, $VERSION2 was NOT unzipped successfully!"
 		fi
 
 
@@ -160,9 +160,9 @@ fi
 		
 		if [ -d ${ext}/$VERSION3 ]	
 			then
-				echo "Third Version was unzipped successfully!"
+				echo "Third Version, $VERSION3 was unzipped successfully!"
 		else
-				echo "Third Version was NOT unzipped successfully!"
+				echo "Third Version, $VERSION3 was NOT unzipped successfully!"
 		fi
 
 
@@ -191,9 +191,9 @@ fi
 
 	if [ -d ${ext}/$VERSION4 ]
 		then
-			echo "Fourth Version was unzipped successfully!"
+			echo "Fourth Version, $VERSION4 was unzipped successfully!"
 	else
-			echo "Fourth Version was NOT unzipped successfully!"
+			echo "Fourth Version, $VERSION4 was NOT unzipped successfully!"
 	fi
 
 
@@ -225,9 +225,9 @@ fi
 		
 		if [ -d ${ext}/$VERSION5 ]
 			then
-				echo "Last Version was unzipped successfully!"
+				echo "Last Version, $VERSION5 was unzipped successfully!"
 		else
-				echo "Last Version was NOT unzipped successfully!"
+				echo "Last Version, $VERSION5 was NOT unzipped successfully!"
 		fi
 
 
