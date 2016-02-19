@@ -1,4 +1,4 @@
-# DistBuilder V.2
+# DistBuilder
 ##### Created by Franz Gotthardt
 ##### GNU Licensed
 
