@@ -1,1 +1,77 @@
 # DistBuilder
+DistBuilderV2.sh
+Skip to end of metadata
+Created by Franz Gotthardt, last modified on Feb 03, 2016 Go to start of metadata
+This is the second iteration of the DistBuilder.sh script, the intention was to give a foolproof approach to building distributions in the local git repository, entered after "path=".
+The Script will ask you for every required information and has several ways to handle wrong input.
+After the required input has been entered, the script will build the Distribution and create a folder hierarchy in the path entered after "ext="
+Properties
+
+
+Adjust path to your build destination (dap folder)
+Adjust ext to your desired destination for the hierarchy
+ 
+DistBuilder.sh
+ 
+How To Use
+Download the Script and access the Folder where you've placed it with the console. 
+Open the file with a text editor and adjust your path to Datameer (path=) and your desired path for the hierarchy (ext=).
+Once adjusted, you can open this script with mac using Terminal as standard application:
+ 
+Otherwise you have to run it using the terminal manually; access the folder with cd path/to/script and run it using sh DistBuilder.sh
+Variables
+Versions
+Using sh you can add them right behind
+
+These are all accepted input formats, you can use:
+v x.y
+x.y.z
+revision number
+branch tag
+"master"
+Hadoop Specifications
+Once you've successfully submitted your versions to build, you can also add a Hadoop specification, you can do this by simply waiting for the step:
+Add a specific Dist or submit with Enter to use standard Apache:
+add the dist String, e.g hdp-2.2.0
+press enter to use standard distribution
+invalid input will lead to list with available versions, you then have the chance to enter the right one or exit with "x"
+Hierarchy
+This will work intentionally, it will by create a path including the date by default. You can easily change this behaviour by commenting the variable "now="; just add a # before and save it.
+
+ 
+Parameters
+ 
+=
+Select one Hadoop Property for all builds. Instead of deciding for each Versions, simply add e.g ='cdh-5.0.0-mr1'
+
+-d
+Remove date pattern from Build-Hierarchy, this can be placed everywhere within the input
+-r
+Decide to turn off automatic run
+-m
+Decide to turn MySql off for all versions
+ 
+Versionlog
+Goal of V1:
+building multiple distributions (tick)
+handle typical errors (tick)
+support variables, set path manually (tick)
+ 
+Goal V2:
+Iterating through $@ to get scalability (tick)
+for looping the Versions to clear the code (tick)
+add attributes for date hierarchy (tick) skinning (error) secure mode (error)trials (error) -> these are not used at the moment (warning)
+individual hadoop dists for versions (tick)
+easily add the same for all (tick)
+Add Revisioncheck to avoid duplicated versions (error) - this is not practicable (warning)
+Added validation of Specs and Versions on Input (tick)
+Last Version will be detected and automatically ran (tick) ( turn off via -r (tick) )
+Added Machine Learning, an already built distribution will be verified faster (tick)
+MySql (tick)
+
+Goal V3: 
+Feature Flags (warning)
+Ports (warning)
+Trials - necessary or possible after build (question)
+Skinning - used (question)
+Secure Mode - used (question)
