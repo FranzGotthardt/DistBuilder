@@ -7,8 +7,8 @@ After the required input has been entered, the script will build the Distributio
 
 # Properties
 
-Adjust path to your build destination (dap folder)
-Adjust ext to your desired destination for the hierarchy
+* Adjust path to your build destination (dap folder)
+* Adjust ext to your desired destination for the hierarchy
  
 # How To Use
 
@@ -16,7 +16,7 @@ Adjust ext to your desired destination for the hierarchy
 * Open the file with a text editor and adjust your path to Datameer (path=) and your desired path for the hierarchy (ext=).
 * Once adjusted, you can open this script with mac using Terminal as standard application:
  
-Otherwise you have to run it using the terminal manually; access the folder with cd path/to/script and run it using sh DistBuilder.sh
+#### Otherwise you have to run it using the terminal manually; access the folder with cd path/to/script and run it using sh DistBuilder.sh
 
 # These are all accepted input formats, you can use:
 
@@ -27,26 +27,24 @@ Otherwise you have to run it using the terminal manually; access the folder with
 * "master"
 
 # Hadoop Specifications
+
 Once you've successfully submitted your versions to build, you can also add a Hadoop specification, you can do this by simply waiting for the step:
+
 Add a specific Dist or submit with Enter to use standard Apache:
-add the dist String, e.g hdp-2.2.0
-press enter to use standard distribution
-invalid input will lead to list with available versions, you then have the chance to enter the right one or exit with "x"
+
+* add the dist String, e.g hdp-2.2.0
+* press enter to use standard distribution
+* invalid input will lead to list with available versions, you then have the chance to enter the right one or exit with "x"
 Hierarchy
-This will work intentionally, it will by create a path including the date by default. You can easily change this behaviour by commenting the variable "now="; just add a # before and save it.
+* This will work intentionally, it will by create a path including the date by default. You can easily change this behaviour by commenting the variable "now="; just add a # before and save it.
 
  
 # Parameters
  
-=
-Select one Hadoop Property for all builds. Instead of deciding for each Versions, simply add e.g ='cdh-5.0.0-mr1'
-
--d
-Remove date pattern from Build-Hierarchy, this can be placed everywhere within the input
--r
-Decide to turn off automatic run
--m
-Decide to turn MySql off for all versions
+* = Select one Hadoop Property for all builds. Instead of deciding for each Versions, simply add e.g ='cdh-5.0.0-mr1'
+* -d Remove date pattern from Build-Hierarchy, this can be placed everywhere within the input
+* -r Decide to turn off automatic run
+* -m Decide to turn MySql off for all versions
  
 # Versionlog
 ## Goal of V1:
