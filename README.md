@@ -10,8 +10,8 @@ After the required input has been entered, the script will build the Distributio
 
 # Properties
 
-* Adjust path to your build destination (Git Repository)
-* Adjust ext to your desired destination for the hierarchy
+* path= your local git repository
+* ext=  desired destination
  
 # How To Use
 
