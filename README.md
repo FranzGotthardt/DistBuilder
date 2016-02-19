@@ -35,8 +35,10 @@ Add a specific Dist or submit with Enter to use standard Apache:
 * add the dist String, e.g hdp-2.2.0
 * press enter to use standard distribution
 * invalid input will lead to list with available versions, you then have the chance to enter the right one or exit with "x"
-Hierarchy
-* This will work intentionally, it will by create a path including the date by default. You can easily change this behaviour by commenting the variable "now="; just add a # before and save it.
+
+# Hierarchy
+
+* This works intentionally, it will create a path including the date by default. The date pattern can be disabled with the Parameter -d .
 
  
 # Parameters
