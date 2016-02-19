@@ -1,13 +1,16 @@
 # DistBuilderV2.sh
 ##### Created by Franz Gotthardt
+##### GNU Licensed
 
-This is the second iteration of the DistBuilder.sh script, the intention was to give a foolproof approach to building distributions in the local git repository, entered after "path=".
+This is the second iteration of the DistBuilder.sh script, the intention was a foolproof approach to building distributions in the local git repository, which has to be entered after "path=".
+
 The Script will ask you for every required information and has several ways to handle wrong input.
+
 After the required input has been entered, the script will build the Distribution and create a folder hierarchy in the path entered after "ext="
 
 # Properties
 
-* Adjust path to your build destination (dap folder)
+* Adjust path to your build destination (Git Repository)
 * Adjust ext to your desired destination for the hierarchy
  
 # How To Use
