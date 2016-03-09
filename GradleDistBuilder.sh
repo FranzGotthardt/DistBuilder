@@ -554,7 +554,6 @@ for i in "$@"
 				      -*) echo "Bad option '$i' " ; helpParam ; exit ;;
 				 	   *) continue ;;
 			
-
 				#   -dmg) build trial
 				#     -p) use ports
 		
