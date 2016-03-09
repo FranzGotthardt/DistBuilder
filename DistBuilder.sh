@@ -10,7 +10,7 @@
 		########																								########
 		########						## Add your own path to DAP folder (dist build)							########
 		########																								########
-											path="/Users/$USER/Documents/build/dap"
+											path="/Users/$USER/Documents/GitRepo/dap"
 		########																								########
 		########							## Path to Create Hierarchy at ## 									########
 		########																								########

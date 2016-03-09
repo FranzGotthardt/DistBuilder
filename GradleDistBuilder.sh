@@ -43,7 +43,7 @@ elif [[ $m -eq 0 ]];
 fi
 
 SPECS[$v]=$SPEC 
-VERSIONEN[$v]=$1 && echo "Version $v was set to $1 $SPEC "
+VERSIONS[$v]=$1 && echo "Version $v was set to $1 $SPEC "
 DESTS[$v]=$dest
 
 	let v++
@@ -84,22 +84,25 @@ fi
 
 if [[ ${#SPEC} -gt 0 ]];
 	then
-		Hadoop="-Phadoop.dist=$SPEC"
+		#Hadoop="-Phadoop.dist=$SPEC"
+		Hadoop="-Dhadoop.dist=$SPEC"
 fi
 
 ## Set standard path for standard Dists
 
 if [[ ${#dest} -eq 0 ]];
 	then
-		dest=${ext}
+		dest="${ext}"
 fi
 
 if [ "$t" = "true" ];
 	then
 starttime=$(date +%s)
 
-git checkout $VERSION && git pull && ./gradlew clean dist $Hadoop && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now
+#git checkout $VERSION && git pull && ./gradlew clean dist $Hadoop ${PROPERTIES[@]} && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now
 #git checkout $VERSION && git pull && ant clean-all dist $Hadoop && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now
+
+echo "${PROPERTIES[@]}"
 
 else
 
@@ -140,7 +143,7 @@ function check {
 test -s ${cdir} || ( echo "Destination ($cdir) was not found!" && echo "" >> $cdir && echo "Created a new Versionlist at $cdir" ) 
 test -s ${cdir} && cval=$( grep -ic "$VERSION" < "$cdir" ) || echo "You didn't build $VERSION before, it was not found at the Versionlist at $cdir !"
 
-if [ "$cval" -eq 1 ];
+if [[ "$cval" -eq 1 ]];
 	then
 		echo "$VERSION was used before, it was found in the Versionlist"
 	
@@ -169,13 +172,7 @@ else
 	fi
 fi
 
-
-if [ "$h" = "false" ];
-	then	
-		append "$VERSION"
-else
-		Speccheck "$VERSION"
-fi
+Speccheck "$VERSION"
   
 			      }
 
@@ -183,14 +180,14 @@ fi
 
 function HandleIt {
 
-echo "No Version has been entered on start"	&& read -p "Please type your desired Versions separated by Blankspace:`echo $'\n> '` " -a VERSIONEN
+echo "No Version has been entered on start"	&& read -p "Please type your desired Versions separated by Blankspace:`echo $'\n> '` " -a VERSIONS
 v=0
-if [[ "${#VERSIONEN[@]}" -gt 0 ]];
+if [[ "${#VERSIONS[@]}" -gt 0 ]];
 	then
-		for VERSION in "${VERSIONEN[$v]}"
+		for VERSION in "${VERSIONS[$v]}"
 			do
 		
-		VERSION=${VERSIONEN[$v]}
+		VERSION=${VERSIONS[$v]}
 
 		check "$VERSION"		
 	
@@ -225,19 +222,19 @@ fi
 
 function Iterate {
 
-		for v in "${!VERSIONEN[@]}"
+		for v in "${!VERSIONS[@]}"
 			do
 
-			VERSION=${VERSIONEN[$v]}
+			VERSION=${VERSIONS[$v]}
 			SPEC=${SPECS[$v]}
 			dest=${DESTS[$v]}
 
-			echo "Distribution(s) left to build: ${VERSIONEN[@]}"		
+			echo "Distribution(s) left to build: ${VERSIONS[@]}"		
 			echo "Building $VERSION $SPEC"
 
 			build "$VERSION"
 
-			if [[ ${#VERSIONEN[@]} -lt 2 ]];
+			if [[ ${#VERSIONS[@]} -lt 2 ]];
 				then
 					run "$VERSION"
 					times
@@ -246,7 +243,7 @@ function Iterate {
 
 ## Remove the used Version from the Array and Clear the Variables
 
-			unset VERSIONEN[$v]
+			unset VERSIONS[$v]
 
 			if [ "$h" = "false" ]; 
 				then
@@ -269,21 +266,18 @@ if [ -d ${dest}/$VERSION/"$now"Datameer*/ ] && [ "$r" = "true" ];
 		cd ${dest}/$VERSION/"$now"Datameer*/
 		bin/conductor.sh restart && echo "Successful!"
 		open -a Google\ Chrome --new --args -incognito "http:\\localhost:8080"
-		ENDTIME=$(date +%M%s)
-		TASKTIME=$(( ENDTIME - $starttime ))
 
-		echo "It took $TASKTIME to complete this task..."
-
+		echo "It took $(( $buildtime / 60 )) Minutes and $(( $buildtime % 60 )) seconds to complete this task."
 
 	exit
 
 elif [ "$r" = "false" ];
 	then
 		echo "You've decided not to run the Version, building is finished."
-		echo "It took $(($ENDTIME - $starttime)) Minutes and $(($ENDSEC - $STARTSEC )) seconds to complete this task..."
+		echo "It took $(( $buildtime / 60 )) Minutes and $(( $buildtime % 60 )) seconds to complete this task."
 else
 		echo "Building $VERSION $SPEC was NOT successfull!"
-		echo "It took $(( $buildtime / 60 )) Minutes and $(( $buildtime % 60 )) seconds to complete this task..."
+		echo "It took $(( $buildtime / 60 )) Minutes and $(( $buildtime % 60 )) seconds to complete this task."
 
 fi
 
@@ -294,17 +288,23 @@ fi
 function Speccheck {
 
 VERSION="$1"
+dest="${ext}"
 
 ## For HandleIt -z if empty String
 
 if [ -z "$VERSION" ];
 	then
-		VERSION=${VERSIONEN[$v]}
+		VERSION=${VERSIONS[$v]}
 fi
 
-read -p "Add a specific Hadoop Parameter (e.g hdp-2.2.0) for $VERSION submit with Enter to use Apache:`echo $'\n> '`" -r SPEC && specsize=${#SPEC} 
-dir="${dest}/$VERSION/Specs/Speclist-${VERSION///}.txt"
+if [ -z "$SPEC" ];
+	then
 
+read -e -p "Add a specific Hadoop Parameter (e.g hdp-2.2.0) for $VERSION submit with Enter to use Apache:`echo $'\n> '`" -r SPEC && specsize=${#SPEC} 
+
+fi
+
+dir="${dest}/$VERSION/Specs/Speclist-${VERSION///}.txt"
 mkdir -p "${dest}/$VERSION/Specs/"
 
 if [ -s ${dir} ];
@@ -346,7 +346,7 @@ elif [[ ${#SPEC} -lt 6 ]];
 				append "$VERSION"
 		fi
 else
-	if [ $val -eq 1 ]; 
+	if [[ $val -eq 1 ]]; 
 		then
 			echo "$SPEC was FOUND, it was already used for $VERSION !"
 			dest="${dest}/Hadoop/$SPEC"
@@ -356,9 +356,11 @@ else
 		else
 			echo "$SPEC was NOT found, it was not used for $VERSION before!"
 			gradir="${dest}/$VERSION/Specs/Gradlelist-${VERSION///}.txt"
-			test -s ${gradir} && gval=$( grep -ic "$SPEC" < "$gradir" ) || ./gradlew -q versions > $gradir
+			gval=$( grep -ic "$SPEC" < "$gradir" ) || ./gradlew -q versions > $gradir
 
-			if [ $gval -eq 1 ];
+			#test -s ${gradir} && 
+
+			if [[ $gval -eq 1 ]];
 				then	
 					echo "$SPEC was found in gradle versions!"
 					dest="${dest}/Hadoop/$SPEC"
@@ -373,7 +375,7 @@ else
 					read -p "Please add a specific Hadoop Parameter for $VERSION or submit with Enter to use Apache:`echo $'\n> '`" -r SPEC
 					gval=$( grep -ic "$SPEC" < "$gradir" )
 
-						if [ $gval -eq 1 ];
+						if [[ $gval -eq 1 ]];
 							then
 								echo "$SPEC was found in gradle versions!"
 								dest="${dest}/Hadoop/$SPEC"
@@ -404,7 +406,7 @@ fi
 
 ## Additions
 
-function helpme {
+function helpMe {
 
  echo "DistBuilder
 
@@ -432,11 +434,13 @@ The Script will create a path including the date by default.
 	* -r Decide to turn off automatic run
 	* -m Turn MySql off for all versions
  	* +m Turn MySQL on for all versions
+ 	* -P to add a Feature; e.g.: -PtabNavigationFeature=true 
 
 
  "
+}
 
-function helpParam {
+function helpVersion {
 
 echo "
 Accepted Patterns for Versions are:
@@ -449,7 +453,7 @@ Accepted Patterns for Versions are:
 "
 }
 
-function helpVersion {
+function helpParam {
 
 echo "
 Parameters 
@@ -461,13 +465,13 @@ The Script will create a path including the date by default.
 	* -r Decide to turn off automatic run
 	* -m Turn MySql off for all versions
  	* +m Turn MySQL on for all versions
- 
+  	* -P to add a Feature; e.g.: -PtabNavigationFeature=true 
+
 "
 
 
 }
 
-}
 
 function teste {
 
@@ -478,9 +482,12 @@ echo $SPEC
 echo ${SPECS[$v]}
 echo ${SPECS[@]}
 echo $VERSION
-echo ${VERSIONEN[$v]}
-echo ${VERSIONEN[@]}
+echo ${VERSIONS[$v]}
+echo ${VERSIONS[@]}
 echo ${MYSQL[@]}
+echo $PROPERTY 	
+echo ${PROPERTIES[$v]}
+echo ${PROPERTIES[@]}
 
 }
 
@@ -498,9 +505,11 @@ git checkout -q master && git pull -q
 
 ## Declare Arrays
 
-declare -a VERSIONEN
+declare -a VERSIONS
 declare -a SPECS
 declare -a MYSQL
+declare -a PROPERTIES
+
 
 ## Declare and Set Variables
 
@@ -510,10 +519,12 @@ declare d h m n r v x
 			h="true"	   # Hadoop Parameter
 			m=0			   # MySQL Parameter
 			n=0			   # LoopCounter
+			p="true"	   # Build Parameters
 			r="true"       # Run Parameter
 			t="true"	   # Test Parameter
 			v=1 		   # Loop
 			x=0 		   # Loop
+			z=0 		   # Loop for Properties
 			
 dest="${ext}"
 now="${datum}"
@@ -534,13 +545,16 @@ for i in "$@"
 		case "$i" in 
 				      =*) SPEC="${i//=/}" ; dest="${dest}/Hadoop/$SPEC" ; h=false ; echo "You've decided to use $SPEC for all Versions" ;;
 					  -d) d=false ; echo "Date Parameter was turned off!" ;;
-		   -h|'help'|'h') helpme ;; 
-					  -m) m=false ;;
-					  +m) m=true ;;				
+		   -h|'help'|'h') helpMe ;; 
+					  -m) m=false ; echo "MySQL has been turned off" ;;
+					  +m) m=true ; echo "You decided to use MySQL for all Versions" ;;				
+			 	   '-P'*) PROPERTIES[$z]=$i  ; p="false" ; let z++ ; echo "[NOTICE!] Parameter $i was added for all Versions!" ;;
 					  -r) r="false" ; echo "You have decided NOT to run the last Version" ;; 
 					  -t) t="false" ; echo "Starting Test Mode" ;;
-				      -?) echo "Bad option '$i' " ; helpParam ;;
+				      -*) echo "Bad option '$i' " ; helpParam ; exit ;;
 				 	   *) continue ;;
+			
+
 				#   -dmg) build trial
 				#     -p) use ports
 		
@@ -555,7 +569,7 @@ for i in "$@"
 
 ## Could use patterns for Versions in the future!
 				      												  =*) continue ;;
-			  												-[dDhHrRtTmM]*) continue ;;
+			  												-[dDhHPrRtTmM]*) continue ;;
 		  														'Master') check "master" ;; 
 ?????????*|v?.*|*[dDaApP]*|'orca'*|'pi'*|'sealion'*|'fd'*|?.*.*|'master') check "$i" ;; 
 					   												   *) echo $i ; helpVersion ;;
@@ -564,7 +578,7 @@ done
 
 ## If something went wrong, indicated by the lack of versions, the try usual way, else continue as planned.
 
-if [ ${#VERSIONEN[@]} -eq 0 ];
+if [ ${#VERSIONS[@]} -eq 0 ];
 	then
 		HandleIt
 	else
