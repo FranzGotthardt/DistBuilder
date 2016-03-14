@@ -84,9 +84,15 @@ fi
 
 if [[ ${#SPEC} -gt 0 ]];
 	then
-
-		#Hadoop="-Phadoop.dist=$SPEC"
-		Hadoop="-Dhadoop.dist=$SPEC"
+			if [ "$b" = "ant" ];
+				then
+					Hadoop="-Dhadoop.dist=$SPEC"
+			elif [ "$b" = "gradle" ];
+				then
+					Hadoop="-Phadoop.dist=$SPEC"
+			else
+					echo "b is $b [Error#97]" && exit
+			fi
 fi
 
 ## Set standard path for standard Dists
@@ -102,8 +108,15 @@ if [ "$t" = "true" ];
 	then
 		starttime=$(date +%s)
 
-		#git checkout $VERSION && git pull && ./gradlew clean dist $Hadoop ${PROPERTIES[@]} && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now
-		git checkout $VERSION && git pull && ant clean-all dist $Hadoop && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now || e="false"
+				if [ "$b" = "ant" ];
+					then
+						git checkout $VERSION && git pull && ant clean-all dist $Hadoop && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now && e="true" || e="false"
+					elif [ "$b" = "gradle" ];
+					then
+						git checkout $VERSION && git pull && ./gradlew clean dist $Hadoop ${PROPERTIES[@]} && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now
+					else
+						echo "$b [Error#129]" && exit
+				fi
 
 		while [ "$e" = "false" ];
 			do
