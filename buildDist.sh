@@ -84,6 +84,7 @@ fi
 
 if [[ ${#SPEC} -gt 0 ]];
 	then
+
 		#Hadoop="-Phadoop.dist=$SPEC"
 		Hadoop="-Dhadoop.dist=$SPEC"
 fi
@@ -95,23 +96,45 @@ if [[ ${#dest} -eq 0 ]];
 		dest="${ext}"
 fi
 
+## Start Time Counting for Task
+
 if [ "$t" = "true" ];
 	then
-starttime=$(date +%s)
+		starttime=$(date +%s)
 
-#git checkout $VERSION && git pull && ./gradlew clean dist $Hadoop ${PROPERTIES[@]} && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now
-git checkout $VERSION && git pull && ant clean-all dist $Hadoop && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now
+		#git checkout $VERSION && git pull && ./gradlew clean dist $Hadoop ${PROPERTIES[@]} && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now
+		git checkout $VERSION && git pull && ant clean-all dist $Hadoop && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now || e="false"
 
-echo "${PROPERTIES[@]}"
+		while [ "$e" = "false" ];
+			do
+	
+				echo "There was an Error while building, do you want to restart the Process? Gradlew Clean GenerateImmutables will be exectued before." 
 
-else
+				if [[ $REPLY =~ ^[Yy]$ ]];
+					then
+						MYSQL[$v]="true" && echo "Activated MySQL for $1"
+					else
+						exit
+				fi
 
-teste && echo "I Build $VERSION $SPEC at Hadoop: $Hadoop ; dest is $dest from path: $path" && echo " Now is $now started at $datum" && echo "MySql is set to $m (${MYSQL[@]})"
+				./gradlew clean generateImmutables
 
+				if [ "$b" = "ant" ];
+					then
+						git checkout $VERSION && git pull && ant clean-all dist $Hadoop && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now && e="true" || e="false"
+					elif [ "$b" = "gradle" ];
+					then
+						git checkout $VERSION && git pull && ./gradlew clean dist $Hadoop ${PROPERTIES[@]} && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now
+					else
+						echo "$b [Error#129]" && exit
+				fi
+		done
 
+	else
+		teste && echo "I Build $VERSION $SPEC at Hadoop: $Hadoop ; dest is $dest from path: $path" && echo " Now is $now started at $datum" && echo "MySql is set to $m (${MYSQL[@]})"
 fi
 
-test -d ${dest}/$VERSION/"$now"Datameer*/ && echo "> $VERSION $SPEC was unzipped successfully!" || echo "[ERROR:#95] $VERSION $SPEC was NOT unzipped successfully!"
+test -d ${dest}/$VERSION/"$now"Datameer*/ && echo "> $VERSION $SPEC was unzipped successfully!" || echo "[ERROR:#114] $VERSION $SPEC was NOT unzipped successfully!"
 
 endtime=$(date +%s)
 buildtime=$(($endtime - $starttime))
@@ -175,7 +198,6 @@ fi
 Speccheck "$VERSION"
   
 			      }
-
 
 
 function HandleIt {
@@ -513,9 +535,11 @@ declare -a PROPERTIES
 
 ## Declare and Set Variables
 
-declare d h m n r v x 
-
+declare b d e h m n p r t v x z 
+			
+			b="ant"		   # Build Way Parameter
 			d="true"	   # Date Parameter
+			e="true"	   # Error Parameter
 			h="true"	   # Hadoop Parameter
 			m=0			   # MySQL Parameter
 			n=0			   # LoopCounter
@@ -568,7 +592,8 @@ for i in "$@"
 
 ## Could use patterns for Versions in the future!
 				      												  =*) continue ;;
-			  												-[dDhHPrRtTmM]*) continue ;;
+			  									         -[dDhHPrRtTmM]*) continue ;;
+                                    					  'ant'|'gradle') b="$i" ; echo "You've decided to Build using '$b' " ;;
 		  														'Master') check "master" ;; 
 ?????????*|v?.*|*[dDaApP]*|'orca'*|'pi'*|'sealion'*|'fd'*|?.*.*|'master') check "$i" ;; 
 					   												   *) echo $i ; helpVersion ;;
