@@ -121,7 +121,7 @@ if [ "$t" = "true" ];
 		while [ "$e" = "false" ];
 			do
 	
-				echo "There was an Error while building, do you want to restart the Process? Gradlew Clean GenerateImmutables will be exectued before." 
+				read -p "There was an Error while building, do you want to restart the Process? Gradlew Clean GenerateImmutables will be exectued before."  -n 1 -r
 
 				if [[ $REPLY =~ ^[Yy]$ ]];
 					then
@@ -130,7 +130,7 @@ if [ "$t" = "true" ];
 						exit
 				fi
 
-				./gradlew clean generateImmutables
+				./gradlew clean cleanGenerateImmutables generateImmutables
 
 				if [ "$b" = "ant" ];
 					then
