@@ -110,10 +110,10 @@ if [ "$t" = "true" ];
 
 				if [ "$b" = "ant" ];
 					then
-						git checkout $VERSION && git pull && ant clean-all dist $Hadoop && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now && e="true" || e="false"
+						git checkout $VERSION && git pull && ant clean-all dist $Hadoop -D${PROPERTIES[@]} && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now && e="true" || e="false"
 					elif [ "$b" = "gradle" ];
 					then
-						git checkout $VERSION && git pull && ./gradlew clean dist $Hadoop ${PROPERTIES[@]} && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now
+						git checkout $VERSION && git pull && ./gradlew clean dist $Hadoop -P${PROPERTIES[@]} && mkdir -p ${dest}/"$VERSION"/ && unzip -qq ${path}/build/dist/*.zip -d ${dest}/"$VERSION"/$now
 					else
 						echo "$b [Error#129]" && exit
 				fi
@@ -585,7 +585,7 @@ for i in "$@"
 		   -h|'help'|'h') helpMe ;; 
 					  -m) m=false ; echo "MySQL has been turned off" ;;
 					  +m) m=true ; echo "You decided to use MySQL for all Versions" ;;				
-			 	   '-P'*) PROPERTIES[$z]=$i  ; p="false" ; let z++ ; echo "[NOTICE!] Parameter $i was added for all Versions!" ;;
+			 	   '-P'*) PROPERTIES[$z]="${i//-P/}" ; echo ${PROPERTIES[@]} ; p="false" ; let z++ ; echo "[NOTICE!] Parameter $i was added for all Versions!" ;;
 					  -r) r="false" ; echo "You have decided NOT to run the last Version" ;; 
 					  -t) t="false" ; echo "Starting Test Mode" ;;
 				      -*) echo "Bad option '$i' " ; helpParam ; exit ;;
