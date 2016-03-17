@@ -121,7 +121,7 @@ if [ "$t" = "true" ];
 		while [ "$e" = "false" ];
 			do
 	
-				read -p "There was an Error while building, do you want to restart the Process? Gradlew Clean GenerateImmutables will be exectued before."  -n 1 -r
+				read -p "There was an Error while building, do you want to restart the Process?"  -n 1 -r
 
 				if [[ $REPLY =~ ^[Yy]$ ]];
 					then
@@ -130,7 +130,6 @@ if [ "$t" = "true" ];
 						exit
 				fi
 
-				./gradlew clean cleanGenerateImmutables generateImmutables
 
 				if [ "$b" = "ant" ];
 					then
@@ -536,6 +535,10 @@ cd ${path}
 
 ## This is necessary to be able to validate branches
 
+git clean -dfx
+
+./gradlew clean cleanGenerateImmutables generateImmutables
+
 git checkout -q master && git pull -q
 
 ## Declare Arrays
@@ -567,6 +570,7 @@ dest="${ext}"
 now="${datum}"
 STARTMIN=$(date +%M)
 STARTSEC=$(date +%s)
+
 ## Run old approach if no Input was given
 
 if [ -z "$1" ];
